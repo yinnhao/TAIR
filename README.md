@@ -2,7 +2,7 @@
 
 # Text-Aware Image Restoration <br> with Diffusion Models
 <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming--Soon-B31B1B"></a>
-<a href="https://cvlab-kaist.github.io/TAIR/"><img <img src="https://img.shields.io/badge/Project%20Page-online-1E90FF">
+<a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-1E90FF">
 
 
 [Jaewon&nbsp;Min<sup>*1</sup>](https://github.com/Min-Jaewon/) · 
