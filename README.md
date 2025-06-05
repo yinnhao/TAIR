@@ -1,6 +1,6 @@
 <div align="left">
 
-# Text-Aware Image Restoration with Diffusion Models
+# Text-Aware Image Restoration <br> with Diffusion Models
 <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming--Soon-B31B1B"></a>
 <a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-brightgreen"></a>
 
