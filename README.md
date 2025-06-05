@@ -14,9 +14,9 @@ Sangpil&nbsp;Kim<sup>†2</sup> ·
 Hyunhee&nbsp;Park<sup>†4</sup> · 
 [Seungryong&nbsp;Kim<sup>†1</sup>](https://cvlab.kaist.ac.kr/)
 
-<sup>1</sup> KAIST&nbsp;AI · <br>
-<sup>2</sup> Korea&nbsp;University · <br>
-<sup>3</sup> Yonsei&nbsp;University · <br>
+<sup>1</sup> KAIST&nbsp;AI ·
+<sup>2</sup> Korea&nbsp;University ·
+<sup>3</sup> Yonsei&nbsp;University ·
 <sup>4</sup> Samsung&nbsp;Electronics
 
 <sub><sup>*</sup> Equal&nbsp;contribution  <sup>†</sup> Corresponding&nbsp;authors</sub>
