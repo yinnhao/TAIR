@@ -1,6 +1,8 @@
 <div align="left">
 
 # Text-Aware Image Restoration with Diffusion Models
+<a href="#"><img src="https://img.shields.io/badge/arXiv-Coming--Soon-B31B1B"></a>
+<a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-brightgreen"></a>
 
 [Jaewon&nbsp;Min<sup>*1</sup>](https://github.com/Min-Jaewon/) · 
 [Jin&nbsp;Hyeon&nbsp;Kim<sup>*2</sup>](https://github.com/jinlovespho) · 
@@ -19,9 +21,9 @@ Hyunhee&nbsp;Park<sup>†4</sup> ·
 
 <sub><sup>*</sup> Equal&nbsp;contribution  <sup>†</sup> Corresponding&nbsp;authors</sub>
 
-### [Paper&nbsp;(Coming&nbsp;soon)](#) | [Project&nbsp;Page](https://cvlab-kaist.github.io/TAIR)
+<!-- ### [Paper&nbsp;(Coming&nbsp;soon)](#) | [Project&nbsp;Page](https://cvlab-kaist.github.io/TAIR) -->
 
 </div>
 
 ## 📢 News
-
+🚀 **2025.06.01** — Official launch of the repository and project page!
