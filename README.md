@@ -31,5 +31,5 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 </div>
 
 ## 📢 News
-**2025.06.12** — Arxiv paper is released!
-🚀 **2025.06.01** — Official launch of the repository and project page!
+- 📄 **2025.06.12** — Arxiv paper is released! 
+- 🚀 **2025.06.01** — Official launch of the repository and project page!
