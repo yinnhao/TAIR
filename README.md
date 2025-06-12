@@ -1,7 +1,7 @@
 <div align="left">
 
 # Text-Aware Image Restoration with Diffusion Models
-<a href="#"><img src="https://img.shields.io/badge/arXiv-Coming--Soon-B31B1B"></a>
+<a href="https://arxiv.org/abs/2506.09993"><img src="https://img.shields.io/badge/arXiv-2506.09993-B31B1B"></a>
 <a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-1E90FF">
 
 
@@ -31,4 +31,5 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 </div>
 
 ## 📢 News
+**2025.06.12** — Arxiv paper is released!
 🚀 **2025.06.01** — Official launch of the repository and project page!
