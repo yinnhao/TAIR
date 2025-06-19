@@ -2,7 +2,7 @@
 
 # Text-Aware Image Restoration with Diffusion Models
 <a href="https://arxiv.org/abs/2506.09993"><img src="https://img.shields.io/badge/arXiv-2506.09993-B31B1B"></a>
-<a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-1E90FF">
+<a href="https://cvlab-kaist.github.io/TAIR/"><img src="https://img.shields.io/badge/Project%20Page-online-1E90FF"></a>
 <a href="https://huggingface.co/datasets/Min-Jaewon/SA-Text">
   <img src="https://img.shields.io/badge/HuggingFace-SA--Text-yellow?logo=huggingface&logoColor=yellow">
 </a>
