@@ -31,5 +31,28 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 </div>
 
 ## 📢 News
+- 🤗 **2025.06.19** - **SA-Text** and **Real-Text** datasets are released along with the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main)!
 - 📄 **2025.06.12** — Arxiv paper is released! 
 - 🚀 **2025.06.01** — Official launch of the repository and project page!
+
+
+## 💾 SA-Text Dataset
+**SA-Text** is a newly proposed dataset for **Text-Aware Image Restoration (TAIR)** task. It is built from  **SA-1B** dataset using our [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main) and  consists of **100K** image-text instance pairs with detailed scene-level annotations.
+
+**Real-Text** is an evaluation dataset for real-world scenarios. It is constructed from [RealSR](https://github.com/csjcai/RealSR) and [DrealSR](https://github.com/xiezw5/Component-Divide-and-Conquer-for-Real-World-Image-Super-Resolution) using same pipeline as above.
+
+---
+
+### Dataset Download
+
+| Split             | Hugging Face 🤗 | Google Drive 📁 |
+|------------------|------------------|------------------|
+| **SA-Text** | [Link](https://huggingface.co/datasets/Min-Jaewon/SA-Text) | [Link](https://drive.google.com/file/d/1fJugZYInTIWUj0tY_iSddwTwmQDAoO-5/view?usp=sharing) |
+| **Real-Text**       | [Link](https://huggingface.co/datasets/Min-Jaewon/Real-Text) | [Link](#) |
+
+---
+
+### Notes
+
+- Each image is paired with one or more text instances with polygon-level annotations.
+- The dataset follows a consistent annotation format, detailed in the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main).
