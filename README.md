@@ -49,7 +49,7 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 
 | Split             | Hugging Face 🤗 | Google Drive 📁 |
 |------------------|:---------------:|:---------------:|
-| **SA-Text**       | <div align="center">[Link](https://huggingface.co/datasets/Min-Jaewon/SA-Text)</div> | <div align="center">[Link](https://drive.google.com/file/d/1fJugZYInTIWUj0tY_iSddwTwmQDAoO-5/view?usp=sharing)</div> |
+| **SA-Text**       | <div align="center">[Link](https://huggingface.co/datasets/Min-Jaewon/SA-Text)</div> | <div align="center">[Link](https://drive.google.com/file/d/1wnGBwrRNJ-hegPtvt8s4y-iXgdED16L4/view?usp=sharing)</div> |
 | **Real-Text**     | <div align="center">[Link](https://huggingface.co/datasets/Min-Jaewon/Real-Text)</div> | <div align="center">[Link](https://drive.google.com/file/d/1sIjeFe0Rq6IvYEC-pkz6aQ4ubuIge4xi/view?usp=sharing)</div> |
 
 
