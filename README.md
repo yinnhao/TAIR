@@ -31,7 +31,7 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 </div>
 
 ## 📢 News
-- 🤗 **2025.06.19** - **SA-Text** and **Real-Text** datasets are released along with the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main)!
+- 🤗 **2025.06.19** — **SA-Text** and **Real-Text** datasets are released along with the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main)!
 - 📄 **2025.06.12** — Arxiv paper is released! 
 - 🚀 **2025.06.01** — Official launch of the repository and project page!
 
