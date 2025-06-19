@@ -46,9 +46,10 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 ### Dataset Download
 
 | Split             | Hugging Face 🤗 | Google Drive 📁 |
-|------------------|------------------|------------------|
-| **SA-Text** | [Link](https://huggingface.co/datasets/Min-Jaewon/SA-Text) | [Link](https://drive.google.com/file/d/1fJugZYInTIWUj0tY_iSddwTwmQDAoO-5/view?usp=sharing) |
-| **Real-Text**       | [Link](https://huggingface.co/datasets/Min-Jaewon/Real-Text) | [Link](#) |
+|------------------|:---------------:|:---------------:|
+| **SA-Text**       | <div align="center">[Link](https://huggingface.co/datasets/Min-Jaewon/SA-Text)</div> | <div align="center">[Link](https://drive.google.com/file/d/1fJugZYInTIWUj0tY_iSddwTwmQDAoO-5/view?usp=sharing)</div> |
+| **Real-Text**     | <div align="center">[Link](https://huggingface.co/datasets/Min-Jaewon/Real-Text)</div> | <div align="center">[Link](https://drive.google.com/file/d/1sIjeFe0Rq6IvYEC-pkz6aQ4ubuIge4xi/view?usp=sharing)</div> |
+
 
 ---
 
@@ -56,3 +57,4 @@ Hyunhee&nbsp;Park<sup>4†</sup> ·
 
 - Each image is paired with one or more text instances with polygon-level annotations.
 - The dataset follows a consistent annotation format, detailed in the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main).
+- We recommend using the dataset from Google Drive for testing our code.
