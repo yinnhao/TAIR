@@ -136,7 +136,7 @@ def main(args):
             ts_model = models['testr']
 
             # sampling
-            val_z, val_ts_results = sampler.val_sample(     # b 4 56 56
+            val_z, val_ts_results = sampler.val_sample(    
                 model=models['cldm'],
                 device=device,
                 steps=50,

@@ -27,6 +27,7 @@ Text-Aware Image Restoration with Diffusion Models</h1>
 
 
 ## 📢 News 
+- 🌈 **2025.06.24** - TAIR Demo code released!
 - ❤️ **2025.06.23** - Training code released!
 - 🤗 **2025.06.19** — **SA-Text** and **Real-Text** datasets are released along with the [dataset pipeline](https://github.com/paulcho98/text_restoration_dataset/tree/main)!
 - 📄 **2025.06.12** — Arxiv paper is released! 
@@ -118,6 +119,34 @@ bash run_script/train_script/run_train_stage2_terediff.sh
 ```
 bash run_script/train_script/run_train_stage3_terediff.sh
 ```
+
+## 🚀 Text-Aware Image Restoration (TAIR) Demo
+
+
+### Demo Script
+
+Download the released checkpoint of our model (**TeReDiff**) from [here](https://drive.google.com/drive/folders/1Xn0DaL-3ViXpl1pWHPvcmSejTDoIjAQn?usp=drive_link), and set the appropriate parameters in the demo configuration file [here](configs/val/val_terediff.yaml). Then, run the script below to perform a demo on low-quality images and generate high-quality, text-aware restored outputs. The results will be saved in **val_demo_result/** by default.
+
+```
+bash run_script/val_script/run_val_terediff.sh
+```
+
+### TAIR Demo Results 
+Running the demo script above will generate the following restoration results. The visualized images are shown in the order: **Low-Quality (LQ) image / Restored image / High-Quality (HQ) Ground Truth image**. Note that when the text in the LQ images is severely degraded, the model may fail to accurately restore the textual content due to insufficient visual information.
+
+
+<p align="center">
+  <img src="assets/demo_imgs/restored/restored_sa_922529_crop_0_concat.png" width="800">
+</p>
+<p align="center">
+  <img src="assets/demo_imgs/restored/restored_sa_924654_crop_0_concat.png" width="800">
+</p>
+<p align="center">
+  <img src="assets/demo_imgs/restored/restored_sa_965829_crop_1_concat.png" width="800">
+</p>
+<p align="center">
+  <img src="assets/demo_imgs/restored/restored_sa_991053_crop_0_concat.png" width="800">
+</p>
 
 
 ## Citation
