@@ -33,8 +33,6 @@ class TESTR(nn.Module):
         super().__init__()
         self.device = torch.device(cfg.MODEL.DEVICE)
 
-        # self.backbone = backbone
-        
         # fmt: off
         self.d_model                 = cfg.MODEL.TRANSFORMER.HIDDEN_DIM
         self.nhead                   = cfg.MODEL.TRANSFORMER.NHEADS
@@ -75,63 +73,6 @@ class TESTR(nn.Module):
         self.ctrl_point_embed = nn.Embedding(self.num_ctrl_points, self.d_model)
         self.text_embed = nn.Embedding(self.max_text_len, self.d_model)
 
-                
-        # if self.num_feature_levels > 1:
-        #     strides = [8, 16, 32]
-        #     # num_channels = [512, 1024, 2048]
-        #     num_channels 
-        #     num_backbone_outs = len(strides)
-        #     input_proj_list = []
-        #     for _ in range(num_backbone_outs):
-        #         in_channels = num_channels[_]
-        #         input_proj_list.append(nn.Sequential(
-        #             nn.Conv2d(in_channels, self.d_model, kernel_size=1),
-        #             nn.GroupNorm(32, self.d_model),
-        #         ))
-        #     for _ in range(self.num_feature_levels - num_backbone_outs):
-        #         input_proj_list.append(nn.Sequential(
-        #             nn.Conv2d(in_channels, self.d_model,
-        #                       kernel_size=3, stride=2, padding=1),
-        #             nn.GroupNorm(32, self.d_model),
-        #         ))
-        #         in_channels = self.d_model
-        #     self.input_proj = nn.ModuleList(input_proj_list)
-        # else:
-        #     strides = [32]
-        #     num_channels = [2048]
-        #     self.input_proj = nn.ModuleList([
-        #         nn.Sequential(
-        #             nn.Conv2d(
-        #                 num_channels[0], self.d_model, kernel_size=1),
-        #             nn.GroupNorm(32, self.d_model),
-        #         )])
-        
-
-        # JLP - extract feat channel
-        # num_channels = [1280, 1280, 640, 320]
-        # self.diff_feat_proj = nn.ModuleList([
-        #         nn.Sequential(
-        #         nn.Conv2d(num_channels[0], self.d_model, kernel_size=1),
-        #         nn.GroupNorm(32, self.d_model),
-        #         ),
-
-        #         nn.Sequential(
-        #         nn.Conv2d(num_channels[1], self.d_model, kernel_size=1),
-        #         nn.GroupNorm(32, self.d_model),
-        #         ),
-
-        #         nn.Sequential(
-        #         nn.Conv2d(num_channels[2], self.d_model, kernel_size=1),
-        #         nn.GroupNorm(32, self.d_model),
-        #         ),
-
-        #         nn.Sequential(
-        #         nn.Conv2d(num_channels[3], self.d_model, kernel_size=1),
-        #         nn.GroupNorm(32, self.d_model),
-        #         ),
-        #     ]
-        # )
-
         num_channels = [1280, 1280, 640, 320]
         self.diff_feat_proj = nn.ModuleList([
             nn.Sequential(
@@ -170,66 +111,13 @@ class TESTR(nn.Module):
         self.transformer.bbox_embed = self.bbox_coord
 
         self.to(self.device)
-
-        # JLP 
         self.pos_enc_2d= PositionalEncoding2D(128, normalize=True)
 
 
     def forward(self, samples):
-        """ The forward expects a NestedTensor, which consists of:
-               - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
-               - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
-            It returns a dict with the following elements:
-               - "pred_logits": the classification logits (including no-object) for all queries.
-                                Shape= [batch_size x num_queries x (num_classes + 1)]
-               - "pred_keypoints": The normalized keypoint coordinates for all queries, represented as
-                               (x, y). These values are normalized in [0, 1],
-                               relative to the size of each individual image (disregarding possible padding).
-                               See PostProcess for information on how to retrieve the unnormalized bounding box.
-               - "aux_outputs": Optional, only returned when auxilary losses are activated. It is a list of
-                                dictionnaries containing the two above keys for each decoder layer.
-        """
-        # breakpoint()
-        # if isinstance(samples, (list, torch.Tensor)):
-        #     samples = nested_tensor_from_tensor_list(samples)
-        # features, pos = self.backbone(samples)
-
+        
         extracted_feats = samples
         pos = [self.pos_enc_2d(x) for x in extracted_feats]
-
-        # if self.num_feature_levels == 1:    # f
-        #     features = [features[-1]]
-        #     pos = [pos[-1]]
-
-        # srcs = []
-        # masks = []
-        # for l, feat in enumerate(features):     # len(features) = 3, extracted three features from resnet backbone
-        #     src, mask = feat.decompose()
-        #     srcs.append(self.input_proj[l](src))
-        #     masks.append(mask)
-        #     assert mask is not None
-        # if self.num_feature_levels > len(srcs):
-        #     _len_srcs = len(srcs)
-        #     for l in range(_len_srcs, self.num_feature_levels):
-        #         if l == _len_srcs:
-        #             src = self.input_proj[l](features[-1].tensors)
-        #         else:
-        #             src = self.input_proj[l](srcs[-1])
-        #         m = masks[0]
-        #         mask = F.interpolate(
-        #             m[None].float(), size=src.shape[-2:]).to(torch.bool)[0]
-        #         pos_l = self.backbone[1](NestedTensor(src, mask)).to(src.dtype)
-        #         srcs.append(src)
-        #         masks.append(mask)
-        #         pos.append(pos_l)
-
-
-
-
-        # (Pdb) extracted_feats[0].shape torch.Size([2, 1280, 14, 14])
-        # (Pdb) extracted_feats[1].shape torch.Size([2, 1280, 28, 28])
-        # (Pdb) extracted_feats[2].shape torch.Size([2, 640, 56, 56])
-        # (Pdb) extracted_feats[3].shape torch.Size([2, 320, 56, 56])
         
         srcs = []
         masks = []
@@ -238,60 +126,13 @@ class TESTR(nn.Module):
             srcs.append(self.diff_feat_proj[l](feat))
             masks.append(torch.zeros(b, feat_H, feat_W).to(bool).to(feat.device))
 
-
-        # (Pdb) srcs[0].shape torch.Size([2, 256, 14, 14])
-        # (Pdb) srcs[1].shape torch.Size([2, 256, 28, 28])
-        # (Pdb) srcs[2].shape torch.Size([2, 256, 56, 56])
-        # (Pdb) srcs[3].shape torch.Size([2, 256, 56, 56])
-
-        # breakpoint()
-
-
-        ''' 이해 O
-        우리는 bbox, 또는 polygon, 또는 word가 되는 query를 learn하고 싶음.
-        따라서 learnable query를 선언해주고 이것이 model을 거치면서 bbox 또는 polygon 또는 word가 됨.
-        이제 query 하나의 shape를 결정짓는 요소는 box 또는 polygon 또는 word를 어떻게 표현할지에 따라서 다름.
-
-        box로 query를 표현할 경우, box는 (x,y,w,h) 4개의 값으로 표현하면 되기에, 하나의 query.shape = (4,) 이면 된다.
-        N개의 query를 사용할 경우 -> (N,4) 이면 충분
-
-        polygon을 query로 표현할 경우, polygon은 16개의 point, 각 point는 2개의 좌표가 필요하기에, query.shape = (16,2) 가 된다.
-        N개의 query를 사용할 경우 -> (N,16,2)이면 충분
-        
-        word를 query로 표현할 경우, word의 maxlen=20이라고 하면, 하나의 자리에 최대 26개의 알파벳중 하나가 오기에, query.shape = (20, 26) 가 된다.
-        N개의 query를 사용할 경우 -> (N,20,26) 이면 충분
-
-        
-        다시 돌아와서, query가 box,polygon,word등 다양하게 될 수 있다. 이는 최종 output linear layer을 거쳐서 dimension을 맞춰줄 수 있다.
-        예를 들어 box가 될 query의 경우, (N,256) -> linear -> (N,4) 로 마지막에 query별로 4개의 box좌표값만 뱉으면 된다.
-
-        따라서 선언할 때는 굳이 최종 shape으로 선언해줄 필요가 없다.
-        box의 경우, torch.rand(hidden_dim) -> linear -> 4
-
-        polygon의 경우 torch.rand(16, hidden_dim) -> linear -> (16,2)
-        or
-        poly_emb = nn.Embedding(16,hidden_dim)
-        poly_emb.weight: (16,256) -> linear -> (16,2)
-        
-        word의 경우, torch.rand(20, hidden_dim) -> linear -> (20,26) 
-        or
-        word_emb = nn.Embedding(20,hidden_dim)
-        word_emb.weight: (20,hidden_dim) -> linear -> (20,26)
-
-
-        '''
-
-        # breakpoint()
-
-        # n_points, embed_dim --> n_objects, n_points, embed_dim
-        ctrl_point_embed = self.ctrl_point_embed.weight[None, ...].repeat(self.num_proposals, 1, 1)                     # 100 16 256
-        text_pos_embed = self.text_pos_embed(self.text_embed.weight)[None, ...].repeat(self.num_proposals, 1, 1)        # 100 25 256
-        text_embed = self.text_embed.weight[None, ...].repeat(self.num_proposals, 1, 1)                                 # 100 25 256
+        ctrl_point_embed = self.ctrl_point_embed.weight[None, ...].repeat(self.num_proposals, 1, 1)                     
+        text_pos_embed = self.text_pos_embed(self.text_embed.weight)[None, ...].repeat(self.num_proposals, 1, 1)        
+        text_embed = self.text_embed.weight[None, ...].repeat(self.num_proposals, 1, 1)                                 
 
         hs, hs_text, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact, enc_box_ref_point = self.transformer(
             srcs, masks, pos, ctrl_point_embed, text_embed, text_pos_embed, text_mask=None)
 
-        # breakpoint()
         outputs_classes = []
         outputs_coords = []
         outputs_texts = []
@@ -312,16 +153,14 @@ class TESTR(nn.Module):
             outputs_coord = sigmoid_offset(tmp, offset=self.sigmoid_offset)
             outputs_classes.append(outputs_class)
             outputs_coords.append(outputs_coord)
-        
-        # breakpoint()
-        outputs_class = torch.stack(outputs_classes)    # 6 b 100 16 1
-        outputs_coord = torch.stack(outputs_coords)     # 6 b 100 16 2
-        outputs_text = torch.stack(outputs_texts)       # 6 b 100 25 97
 
-        # breakpoint()
-        out = {'pred_logits': outputs_class[-1],        # b 100 16 1
-               'pred_ctrl_points': outputs_coord[-1],   # b 100 16 2
-               'pred_texts': outputs_text[-1]}          # b 100 25 97
+        outputs_class = torch.stack(outputs_classes)    
+        outputs_coord = torch.stack(outputs_coords)     
+        outputs_text = torch.stack(outputs_texts)       
+
+        out = {'pred_logits': outputs_class[-1],        
+               'pred_ctrl_points': outputs_coord[-1],   
+               'pred_texts': outputs_text[-1]}          
         if self.aux_loss:
             out['aux_outputs'] = self._set_aux_loss(
                 outputs_class, outputs_coord, outputs_text)

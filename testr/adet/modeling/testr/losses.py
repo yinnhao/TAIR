@@ -227,7 +227,6 @@ class SetCriterion(nn.Module):
                     l_dict = {k + f'_{i}': v for k, v in l_dict.items()}
                     losses.update(l_dict)
 
-        # breakpoint()
         if 'enc_outputs' in outputs:
             enc_outputs = outputs['enc_outputs']
             indices = self.enc_matcher(enc_outputs, targets)

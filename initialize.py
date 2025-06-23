@@ -125,7 +125,7 @@ def load_model(accelerator, device, args, cfg):
     loaded_models['cldm'] = cldm.train().to(device)
     loaded_models['swinir'] = swinir.eval().to(device)
     
-    # training ocr detection with diffbir features
+    # load text spotting module 
     if cfg.exp_args.model_name == 'terediff_stage2' or cfg.exp_args.model_name == 'terediff_stage3':
         sys.path.append(f'{os.getcwd()}/testr')
         from testr.adet.modeling.transformer_detector import TransformerDetector
