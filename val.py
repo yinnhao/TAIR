@@ -36,9 +36,7 @@ def main(args):
     if cfg.log_args.log_tool == 'wandb':
         wandb.login(key=cfg.log_args.wandb_key)
         wandb.init(project=cfg.log_args.wandb_proj_name, 
-                # name='VAL_terediff_stage3_SA-Text(lv3)', 
-                name='VAL_terediff_stage3_SA-Text(lv2)', 
-                # name='VAL_terediff_stage3_DEMO',
+                name='VAL_terediff_stage3_DEMO',
                 config=argparse.Namespace(**OmegaConf.to_container(cfg, resolve=True))
         )
 
