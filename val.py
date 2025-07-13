@@ -135,30 +135,67 @@ def merge_crops_with_overlap(crops, positions, original_size, actual_crop_size, 
     merged = torch.zeros((1, 3, sr_h, sr_w), device=device)
     weights = torch.zeros((1, 1, sr_h, sr_w), device=device)
     
-    # 创建权重模板（中心权重高，边缘权重低）
-    weight_template = torch.ones((1, 1, sr_crop_h, sr_crop_w), device=device)
-    if sr_overlap > 0:
-        # 使用线性渐变作为权重
-        fade_in = torch.linspace(0, 1, sr_overlap, device=device)
-        fade_out = torch.linspace(1, 0, sr_overlap, device=device)
-        
-        # 上边界
-        weight_template[:, :, :sr_overlap, :] *= fade_in.view(-1, 1)
-        # 下边界
-        weight_template[:, :, -sr_overlap:, :] *= fade_out.view(-1, 1)
-        # 左边界
-        weight_template[:, :, :, :sr_overlap] *= fade_in.view(1, -1)
-        # 右边界
-        weight_template[:, :, :, -sr_overlap:] *= fade_out.view(1, -1)
+    # 调试信息
+    print(f"Debug: LQ size: {lq_w}x{lq_h}, SR size: {sr_w}x{sr_h}")
+    print(f"Debug: LQ crop size: {lq_crop_w}x{lq_crop_h}, SR crop size: {sr_crop_w}x{sr_crop_h}")
+    print(f"Debug: Number of crops: {len(crops)}")
+    if len(crops) > 0:
+        print(f"Debug: First crop shape: {crops[0].shape}")
     
-    # 合并每个裁剪块
-    for crop, (lq_x, lq_y) in zip(crops, positions):
-        # 将LQ位置转换为SR位置
-        sr_x = lq_x * scale_factor
-        sr_y = lq_y * scale_factor
+    # 创建权重模板（中心权重高，边缘权重低）
+    # 权重模板的尺寸应该与实际的crop尺寸匹配
+    if len(crops) > 0:
+        crop_shape = crops[0].shape  # [1, 3, H, W]
+        actual_sr_crop_h = crop_shape[2]
+        actual_sr_crop_w = crop_shape[3]
         
-        merged[:, :, sr_y:sr_y+sr_crop_h, sr_x:sr_x+sr_crop_w] += crop * weight_template
-        weights[:, :, sr_y:sr_y+sr_crop_h, sr_x:sr_x+sr_crop_w] += weight_template
+        print(f"Debug: Actual SR crop size from tensor: {actual_sr_crop_w}x{actual_sr_crop_h}")
+        
+        weight_template = torch.ones((1, 1, actual_sr_crop_h, actual_sr_crop_w), device=device)
+        
+        # 重新计算重叠区域大小，基于实际的crop尺寸
+        actual_sr_overlap = int(overlap * actual_sr_crop_h / lq_crop_h)  # 按比例缩放
+        
+        if actual_sr_overlap > 0:
+            # 使用线性渐变作为权重
+            fade_in = torch.linspace(0, 1, actual_sr_overlap, device=device)
+            fade_out = torch.linspace(1, 0, actual_sr_overlap, device=device)
+            
+            # 上边界
+            if actual_sr_overlap < actual_sr_crop_h:
+                weight_template[:, :, :actual_sr_overlap, :] *= fade_in.view(-1, 1)
+            # 下边界  
+            if actual_sr_overlap < actual_sr_crop_h:
+                weight_template[:, :, -actual_sr_overlap:, :] *= fade_out.view(-1, 1)
+            # 左边界
+            if actual_sr_overlap < actual_sr_crop_w:
+                weight_template[:, :, :, :actual_sr_overlap] *= fade_in.view(1, -1)
+            # 右边界
+            if actual_sr_overlap < actual_sr_crop_w:
+                weight_template[:, :, :, -actual_sr_overlap:] *= fade_out.view(1, -1)
+        
+        # 合并每个裁剪块
+        for i, (crop, (lq_x, lq_y)) in enumerate(zip(crops, positions)):
+            # 将LQ位置转换为SR位置
+            sr_x = int(lq_x * actual_sr_crop_w / lq_crop_w)
+            sr_y = int(lq_y * actual_sr_crop_h / lq_crop_h)
+            
+            print(f"Debug: Crop {i}: LQ pos ({lq_x}, {lq_y}) -> SR pos ({sr_x}, {sr_y})")
+            print(f"Debug: Crop {i}: shape {crop.shape}, weight_template shape {weight_template.shape}")
+            
+            # 确保不会越界
+            end_y = min(sr_y + actual_sr_crop_h, sr_h)
+            end_x = min(sr_x + actual_sr_crop_w, sr_w)
+            
+            crop_h_to_use = end_y - sr_y
+            crop_w_to_use = end_x - sr_x
+            
+            if crop_h_to_use > 0 and crop_w_to_use > 0:
+                crop_slice = crop[:, :, :crop_h_to_use, :crop_w_to_use]
+                weight_slice = weight_template[:, :, :crop_h_to_use, :crop_w_to_use]
+                
+                merged[:, :, sr_y:end_y, sr_x:end_x] += crop_slice * weight_slice
+                weights[:, :, sr_y:end_y, sr_x:end_x] += weight_slice
     
     # 归一化
     merged = merged / (weights + 1e-8)
