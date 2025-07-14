@@ -94,12 +94,9 @@ model:
       parameterization: v
 
 dataset:
-  gt_img_path: ./assets/demo_imgs/test_set_text
-  lq_img_path: ./assets/demo_imgs/test_set_text
-  crop_size: [128, 128]
-  overlap: 16
-  enable_crop: true
-  window_size: 8
+  gt_img_path: ./assets/demo_imgs/test_set_text_exm1
+  lq_img_path: ./assets/demo_imgs/test_set_text_exm1
+
 train:
   sd_path: ./weights/sd2.1-base-zsnr-laionaes5.ckpt       
   swinir_path: ./weights/realesrgan_s4_swinir_100k.pth
