@@ -94,9 +94,12 @@ model:
       parameterization: v
 
 dataset:
-  gt_img_path: ./assets/demo_imgs/test_set_text_128
-  lq_img_path: ./assets/demo_imgs/test_set_text_128
-
+  gt_img_path: ./assets/demo_imgs/test_set_text
+  lq_img_path: ./assets/demo_imgs/test_set_text
+  crop_size: [128, 128]
+  overlap: 16
+  enable_crop: true
+  window_size: 8
 train:
   sd_path: ./weights/sd2.1-base-zsnr-laionaes5.ckpt       
   swinir_path: ./weights/realesrgan_s4_swinir_100k.pth
@@ -117,5 +120,5 @@ exp_args:
   model_name: terediff_stage3
   testr_ckpt_dir: 
   resume_ckpt_dir: ./weights/terediff_stage3.pt # to use our ckpt set it to /PATH/TO/terediff_stage3.pt
-  save_val_img_dir: ./val_demo_result
+  save_val_img_dir: ./val_img_res
   prompt_style: CAPTION   # choose from [CAPTION, TAG] for prompting styles

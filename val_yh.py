@@ -389,44 +389,44 @@ def main(args):
         
         
         # log total psnr, ssim, lpips for val
-        tot_val_psnr.append(torch.mean(metric_psnr(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_ssim.append(torch.mean(metric_ssim(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_lpips.append(torch.mean(metric_lpips(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_dists.append(torch.mean(metric_dists(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_niqe.append(torch.mean(metric_niqe(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_musiq.append(torch.mean(metric_musiq(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_maniqa.append(torch.mean(metric_maniqa(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
-        tot_val_clipiqa.append(torch.mean(metric_clipiqa(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_psnr.append(torch.mean(metric_psnr(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_ssim.append(torch.mean(metric_ssim(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_lpips.append(torch.mean(metric_lpips(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_dists.append(torch.mean(metric_dists(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_niqe.append(torch.mean(metric_niqe(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_musiq.append(torch.mean(metric_musiq(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_maniqa.append(torch.mean(metric_maniqa(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
+        # tot_val_clipiqa.append(torch.mean(metric_clipiqa(final_restored_image, torch.clamp((val_gt + 1) / 2, min=0, max=1))).item())
         
         # log sampling val imgs to wandb
         if accelerator.is_main_process and cfg.log_args.log_tool == 'wandb':
 
-            # log sampling val metrics 
-            wandb.log({f'sampling_val_METRIC/val_psnr': torch.mean(metric_psnr(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_ssim': torch.mean(metric_ssim(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_lpips': torch.mean(metric_lpips(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_dists': torch.mean(metric_dists(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_niqe': torch.mean(metric_niqe(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_musiq': torch.mean(metric_musiq(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_maniqa': torch.mean(metric_maniqa(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    f'sampling_val_METRIC/val_clipiqa': torch.mean(metric_clipiqa(
-                                                                            final_restored_image, 
-                                                                            torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
-                    })
+            # # log sampling val metrics 
+            # wandb.log({f'sampling_val_METRIC/val_psnr': torch.mean(metric_psnr(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_ssim': torch.mean(metric_ssim(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_lpips': torch.mean(metric_lpips(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_dists': torch.mean(metric_dists(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_niqe': torch.mean(metric_niqe(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_musiq': torch.mean(metric_musiq(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_maniqa': torch.mean(metric_maniqa(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         f'sampling_val_METRIC/val_clipiqa': torch.mean(metric_clipiqa(
+            #                                                                 final_restored_image, 
+            #                                                                 torch.clamp((val_gt + 1) / 2, min=0, max=1))).item(),
+            #         })
             
             # log sampling val images 
             wandb.log({ f'sampling_val_FINAL_VIS/{gt_id}_val_gt': wandb.Image((val_gt + 1) / 2, caption=f'gt_img'),
@@ -439,28 +439,28 @@ def main(args):
 
         
     # average using numpy
-    tot_val_psnr = np.array(tot_val_psnr).mean()
-    tot_val_ssim = np.array(tot_val_ssim).mean()
-    tot_val_lpips = np.array(tot_val_lpips).mean()
-    tot_val_dists = np.array(tot_val_dists).mean()
-    tot_val_niqe = np.array(tot_val_niqe).mean()
-    tot_val_musiq = np.array(tot_val_musiq).mean()
-    tot_val_maniqa = np.array(tot_val_maniqa).mean()
-    tot_val_clipiqa = np.array(tot_val_clipiqa).mean()
+    # tot_val_psnr = np.array(tot_val_psnr).mean()
+    # tot_val_ssim = np.array(tot_val_ssim).mean()
+    # tot_val_lpips = np.array(tot_val_lpips).mean()
+    # tot_val_dists = np.array(tot_val_dists).mean()
+    # tot_val_niqe = np.array(tot_val_niqe).mean()
+    # tot_val_musiq = np.array(tot_val_musiq).mean()
+    # tot_val_maniqa = np.array(tot_val_maniqa).mean()
+    # tot_val_clipiqa = np.array(tot_val_clipiqa).mean()
 
 
-    # log total val metrics 
-    if accelerator.is_main_process and cfg.log_args.log_tool == 'wandb':
-        wandb.log({
-            f'sampling_val_METRIC/tot_val_psnr': tot_val_psnr,
-            f'sampling_val_METRIC/tot_val_ssim': tot_val_ssim,
-            f'sampling_val_METRIC/tot_val_lpips': tot_val_lpips,
-            f'sampling_val_METRIC/tot_val_dists': tot_val_dists,
-            f'sampling_val_METRIC/tot_val_niqe': tot_val_niqe,
-            f'sampling_val_METRIC/tot_val_musiq': tot_val_musiq,
-            f'sampling_val_METRIC/tot_val_maniqa': tot_val_maniqa,
-            f'sampling_val_METRIC/tot_val_clipiqa': tot_val_clipiqa,
-        })
+    # # log total val metrics 
+    # if accelerator.is_main_process and cfg.log_args.log_tool == 'wandb':
+    #     wandb.log({
+    #         f'sampling_val_METRIC/tot_val_psnr': tot_val_psnr,
+    #         f'sampling_val_METRIC/tot_val_ssim': tot_val_ssim,
+    #         f'sampling_val_METRIC/tot_val_lpips': tot_val_lpips,
+    #         f'sampling_val_METRIC/tot_val_dists': tot_val_dists,
+    #         f'sampling_val_METRIC/tot_val_niqe': tot_val_niqe,
+    #         f'sampling_val_METRIC/tot_val_musiq': tot_val_musiq,
+    #         f'sampling_val_METRIC/tot_val_maniqa': tot_val_maniqa,
+    #         f'sampling_val_METRIC/tot_val_clipiqa': tot_val_clipiqa,
+    #     })
         
 
 
