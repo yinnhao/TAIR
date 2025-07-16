@@ -6,9 +6,9 @@
 
 
 # pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu121
-export https_proxy='10.249.36.23:8243'
-conda create -n tair-cuda12 python=3.10 -y
-conda activate tair-cuda12
+# export https_proxy='10.249.36.23:8243'
+# conda create -n tair-cuda12-new python=3.10 -y
+# conda activate tair-cuda12-new
 pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu121
 
 pip install -r requirements.txt

@@ -1,0 +1,2 @@
+export LD_LIBRARY_PATH=/home/opt/gpuproxy/lib64:/usr/local/lib:/usr/local/x86_64-pc-linux-gnu/lib:/home/opt/nvidia_lib:/usr/lib64:/usr/local/lib:/usr/lib/x86_64-linux-gnu/
+sh run_script/train_script/run_train_stage1_terediff.sh
