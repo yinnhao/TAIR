@@ -125,7 +125,7 @@ def main(args):
             
         with torch.no_grad():
             val_clean = models['swinir'](val_lq)   
-            val_cond = pure_cldm.prepare_condition(val_clean, val_prompt)
+            val_cond = pure_cldm.prepare_condition(val_clean, val_prompt) # text: 1 7 1024 img: 1 4 64 64
 
             M=1
             pure_noise = torch.randn((1, 4, 64, 64), generator=gen, device=device, dtype=torch.float32)

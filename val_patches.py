@@ -311,7 +311,7 @@ def main(args):
         lq_patches = split_image_with_overlap(lq_img, patch_size=128, overlap=16)
 
         restore_imgs = []
-        
+        lines = []
         # 处理每个patch
         for gt_patch, lq_patch in zip(gt_patches, lq_patches):
             val_gt = preprocess_gt(gt_patch).unsqueeze(0).to(device)  # 1 3 512 512
@@ -349,7 +349,7 @@ def main(args):
                 
                 # log val prompts
                 val_prompt = val_prompt[0]
-                lines = []
+                
                 lines.append(f"** using OCR prompt w/ {cfg.exp_args.prompt_style}style **\n")
                 # Format prompt
                 lines.append("initial input prompt:\n")
@@ -364,8 +364,7 @@ def main(args):
                     pred_texts = ', '.join(ts_result['pred_texts'])
                     lines.append(f"timestep: {timestep:<4} /  pred_texts: {pred_texts}\n")
                 
-                # Now convert the list of strings to image
-                img_of_pred_text = text_to_image(lines)
+                
                 
                 restored_img = torch.clamp((pure_cldm.vae_decode(val_z) + 1) / 2, min=0, max=1)   # 1 3 512 512
                 restore_imgs.append(restored_img)
@@ -377,6 +376,10 @@ def main(args):
         
         # 现在final_restored_image是合并后的完整图像
         # 你可以继续进行后续的处理和保存
+        
+        
+        # Now convert the list of strings to image
+        img_of_pred_text = text_to_image(lines)
             
             
             # save sampled images   
