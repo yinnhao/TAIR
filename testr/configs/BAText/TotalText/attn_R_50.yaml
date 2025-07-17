@@ -1,0 +1,29 @@
+ MODEL:
+  WEIGHTS: ""
+  META_ARCHITECTURE: "TransformerDetector"
+  BACKBONE:
+    NAME: "build_resnet_fpn_backbone"
+  RESNETS:
+    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
+  FPN:
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+  TRANSFORMER:
+    NUM_QUERIES: 100
+    HIDDEN_DIM: 256
+    NUM_FEATURE_LEVELS: 4
+    ENC_LAYERS: 6
+    DEC_LAYERS: 6
+    DIM_FEEDFORWARD: 2048
+    DROPOUT: 0.1
+    NHEADS: 8
+    ENC_N_POINTS: 4
+    DEC_N_POINTS: 4
+    NUM_CTRL_POINTS: 16
+    NUM_CHARS: 25
+    # 更新词汇表大小以支持中文
+    VOC_SIZE: 1096  # 根据实际VOCAB_SIZE调整
+  BATEXT:
+    # 更新词汇表大小
+    VOC_SIZE: 1096  # 与TRANSFORMER.VOC_SIZE保持一致
+    NUM_CHARS: 25
+    CUSTOM_DICT: ""  # 如果使用自定义字典，设置路径

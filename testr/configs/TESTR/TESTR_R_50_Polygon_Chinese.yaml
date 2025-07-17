@@ -1,0 +1,33 @@
+_BASE_: "Base-Pretrain-Polygon-Chinese.yaml"
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
+  RESNETS:
+    DEPTH: 50
+  TRANSFORMER:
+    NUM_FEATURE_LEVELS: 4
+    ENC_LAYERS: 6
+    DEC_LAYERS: 6
+    DIM_FEEDFORWARD: 1024
+    HIDDEN_DIM: 256
+    DROPOUT: 0.1
+    NHEADS: 8
+    NUM_QUERIES: 100
+    ENC_N_POINTS: 4
+    DEC_N_POINTS: 4
+    # 中文词汇表大小 - 根据实际的VOCAB_SIZE调整
+    VOC_SIZE: 1096  # ASCII(95) + 中文常用字符(~1000) + 1 for NULL
+    NUM_CHARS: 25   # 可能需要根据中文文本长度调整
+  BATEXT:
+    VOC_SIZE: 1096  # 与TRANSFORMER.VOC_SIZE保持一致
+    NUM_CHARS: 25
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 1e-4
+  LR_BACKBONE: 1e-5
+  WARMUP_ITERS: 0
+  STEPS: (340000,)
+  MAX_ITER: 440000
+  CHECKPOINT_PERIOD: 10000
+TEST:
+  EVAL_PERIOD: 10000
+OUTPUT_DIR: "output/TESTR_R_50_Polygon_Chinese" 

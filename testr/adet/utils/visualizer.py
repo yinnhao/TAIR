@@ -4,18 +4,27 @@ from detectron2.utils.visualizer import Visualizer
 import matplotlib.colors as mplc
 import matplotlib.font_manager as mfm
 
+# 导入中文字符集
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../../..'))
+from terediff.dataset.chinese_vocab import CTLABELS, VOCAB_SIZE
+
 class TextVisualizer(Visualizer):
     def __init__(self, image, metadata, instance_mode, cfg):
         Visualizer.__init__(self, image, metadata, instance_mode=instance_mode)
-        self.voc_size = cfg.MODEL.BATEXT.VOC_SIZE
+        self.voc_size = VOCAB_SIZE + 1  # +1 for NULL_CHAR
         self.use_customer_dictionary = cfg.MODEL.BATEXT.CUSTOM_DICT
         self.use_polygon = cfg.MODEL.TRANSFORMER.USE_POLYGON
+        
         if not self.use_customer_dictionary:
-            self.CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
+            self.CTLABELS = CTLABELS
         else:
             with open(self.use_customer_dictionary, 'rb') as fp:
                 self.CTLABELS = pickle.load(fp)
-        assert(int(self.voc_size - 1) == len(self.CTLABELS)), "voc_size is not matched dictionary size, got {} and {}.".format(int(self.voc_size - 1), len(self.CTLABELS))
+                
+        assert(int(self.voc_size - 1) == len(self.CTLABELS)), \
+            f"voc_size is not matched dictionary size, got {int(self.voc_size - 1)} and {len(self.CTLABELS)}."
 
     def draw_instance_predictions(self, predictions):
         if self.use_polygon:
@@ -45,33 +54,27 @@ class TextVisualizer(Visualizer):
         return points
 
     def _decode_recognition(self, rec):
+        """解码识别结果 - 支持中文"""
         s = ''
         for c in rec:
             c = int(c)
             if c < self.voc_size - 1:
-                if self.voc_size == 96:
-                    s += self.CTLABELS[c]
-                else:
-                    s += str(chr(self.CTLABELS[c]))
-            elif c == self.voc_size -1:
+                s += self.CTLABELS[c]
+            elif c == self.voc_size - 1:
                 s += u'口'
         return s
 
     def _ctc_decode_recognition(self, rec):
-        # ctc decoding
+        """CTC解码识别结果 - 支持中文"""
         last_char = False
         s = ''
         for c in rec:
             c = int(c)
             if c < self.voc_size - 1:
                 if last_char != c:
-                    if self.voc_size == 96:
-                        s += self.CTLABELS[c]
-                        last_char = c
-                    else:
-                        s += str(chr(self.CTLABELS[c]))
-                        last_char = c
-            elif c == self.voc_size -1:
+                    s += self.CTLABELS[c]
+                    last_char = c
+            elif c == self.voc_size - 1:
                 s += u'口'
             else:
                 last_char = False

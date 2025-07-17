@@ -6,7 +6,7 @@ from torch import nn
 from .controlnet import ControlledUnetModel, ControlNet
 from .vae import AutoencoderKL
 from .util import GroupNorm32
-from .clip import FrozenOpenCLIPEmbedder
+from .chinese_clip import ChineseCLIPEmbedder  # 使用中文CLIP
 from .distributions import DiagonalGaussianDistribution
 from ..utils.tilevae import VAEHook
 
@@ -20,12 +20,19 @@ def disabled_train(self: nn.Module) -> nn.Module:
 class ControlLDM(nn.Module):
 
     def __init__(
-        self, unet_cfg, vae_cfg, clip_cfg, controlnet_cfg, latent_scale_factor
+        self, unet_cfg, vae_cfg, clip_cfg, controlnet_cfg, latent_scale_factor, use_chinese_clip=True
     ):
         super().__init__()
         self.unet = ControlledUnetModel(**unet_cfg)
         self.vae = AutoencoderKL(**vae_cfg)
-        self.clip = FrozenOpenCLIPEmbedder(**clip_cfg)
+        
+        # 选择使用中文CLIP或原始CLIP
+        if use_chinese_clip:
+            self.clip = ChineseCLIPEmbedder(**clip_cfg)
+        else:
+            from .clip import FrozenOpenCLIPEmbedder
+            self.clip = FrozenOpenCLIPEmbedder(**clip_cfg)
+            
         self.controlnet = ControlNet(**controlnet_cfg)
         self.scale_factor = latent_scale_factor
         self.control_scales = [1.0] * 13

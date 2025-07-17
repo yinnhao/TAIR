@@ -303,18 +303,22 @@ class SpacedSampler(Sampler):
             for j in range(len(results_per_img.polygons)):
                 val_ctrl_pnt= results_per_img.polygons[j].view(16,2).cpu().detach().numpy().astype(np.int32)    # 32 -> 16 2
                 val_rec = results_per_img.recs[j]
+                
+                # 使用更新的解码函数支持中文
                 val_pred_text = decode(val_rec)
                 
                 pred_polys.append(val_ctrl_pnt)
                 pred_texts.append(val_pred_text)
                 
 
-            caption = [f'"{txt}"' for txt in pred_texts] 
+            caption = [f'"{txt}"' for txt in pred_texts if txt.strip()] 
             if cfg.exp_args.prompt_style == 'CAPTION':
-                pred_prompt = f"A realistic scene where the texts {', '.join(caption) } appear clearly on signs, boards, buildings, or other objects."
+                pred_prompt = f"A realistic scene where the texts {', '.join(caption)} appear clearly on signs, boards, buildings, or other objects."
             elif cfg.exp_args.prompt_style == 'TAG':
                 pred_prompt = f"{', '.join(caption)}"
-            cond['c_txt'] = pure_cldm.clip.encode(pred_prompt)  # b 77 1024
+            
+            # 更新条件
+            cond['c_txt'] = pure_cldm.clip.encode([pred_prompt])
 
             ts_results.append(
                 dict(

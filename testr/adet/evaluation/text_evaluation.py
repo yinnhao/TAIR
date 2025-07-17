@@ -23,7 +23,10 @@ from adet.evaluation import text_eval_script
 import zipfile
 import pickle
 
-from adet.evaluation.lexicon_procesor import LexiconMatcher
+# 导入中文字符集
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../../..'))
+from terediff.dataset.chinese_vocab import CTLABELS, VOCAB_SIZE
 
 NULL_CHAR = u'口'
 
@@ -46,18 +49,21 @@ class TextEvaluator(DatasetEvaluator):
                 f"json_file was not found in MetaDataCatalog for '{dataset_name}'."
             )
         
-        self.voc_size = cfg.MODEL.BATEXT.VOC_SIZE
+        # 使用新的词汇表大小
+        self.voc_size = VOCAB_SIZE + 1  # +1 for NULL_CHAR
         self.use_customer_dictionary = cfg.MODEL.BATEXT.CUSTOM_DICT
         self.use_polygon = cfg.MODEL.TRANSFORMER.USE_POLYGON
+        
+        # 使用新的字符集
         if not self.use_customer_dictionary:
-            self.CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
+            self.CTLABELS = CTLABELS
         else:
             with open(self.use_customer_dictionary, 'rb') as fp:
                 self.CTLABELS = pickle.load(fp)
-        self._lexicon_matcher = LexiconMatcher(dataset_name, cfg.TEST.LEXICON_TYPE, cfg.TEST.USE_LEXICON, 
-                                               self.CTLABELS + [NULL_CHAR],
-                                               weighted_ed=cfg.TEST.WEIGHTED_EDIT_DIST)
-        assert(int(self.voc_size - 1) == len(self.CTLABELS)), "voc_size is not matched dictionary size, got {} and {}.".format(int(self.voc_size - 1), len(self.CTLABELS))
+        
+        # 验证词汇表大小匹配
+        assert(int(self.voc_size - 1) == len(self.CTLABELS)), \
+            f"voc_size is not matched dictionary size, got {int(self.voc_size - 1)} and {len(self.CTLABELS)}."
 
         json_file = PathManager.get_local_path(self._metadata.json_file)
         with contextlib.redirect_stdout(io.StringIO()):
@@ -292,37 +298,29 @@ class TextEvaluator(DatasetEvaluator):
             return points.tolist()
 
     def ctc_decode(self, rec):
-        # ctc decoding
+        """CTC解码 - 支持中文"""
         last_char = False
         s = ''
         for c in rec:
             c = int(c)
             if c < self.voc_size - 1:
                 if last_char != c:
-                    if self.voc_size == 96:
-                        s += self.CTLABELS[c]
-                        last_char = c
-                    else:
-                        s += str(chr(self.CTLABELS[c]))
-                        last_char = c
-            elif c == self.voc_size -1:
-                s += u'口'
+                    s += self.CTLABELS[c]
+                    last_char = c
+            elif c == self.voc_size - 1:
+                s += NULL_CHAR
             else:
                 last_char = False
         return s
     
-    
     def decode(self, rec):
+        """常规解码 - 支持中文"""
         s = ''
         for c in rec:
             c = int(c)
             if c < self.voc_size - 1:
-                if self.voc_size == 96:
-                    s += self.CTLABELS[c]
-                else:
-                    s += str(chr(self.CTLABELS[c]))
-            elif c == self.voc_size -1:
+                s += self.CTLABELS[c]
+            elif c == self.voc_size - 1:
                 s += NULL_CHAR
-    
         return s
             

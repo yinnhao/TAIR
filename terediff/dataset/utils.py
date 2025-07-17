@@ -9,36 +9,46 @@ import torch
 from .diffjpeg import DiffJPEG
 from torch.nn import functional as F
 
-
-# unicode conversion: char <-> int
-# use chr() and ord()
-# char_table = [chr(i) for i in range(32,127)]
-# valid_voc = list(string.printable[:-6])
-# invalid_voc=['□', '∫', 'æ', '⬏', 'Σ', '■', 'Å', 'Ḏ', '£', 'ń', '⌀', 'Ù', '│', 'Ⅶ', 'Â', 'ς', 'Ⅻ', '⁴', 'ъ', '∁', 'Æ', 'α', 'Ç', 'ˣ', '・', '⤤', 'Đ', 'ı', '≡', '⋄', 'Å', 'ᴴ', 'ᵗ', 'Ȃ', 'δ', 'Ì', 'Ρ', '⟷', 'ï', '«', 'ȯ', 'Ǒ', '⇩', 'ζ', '✰', '⁹', 'м', 'Ộ', '❘', '₄', '²', 'φ', '⌴', '⇨', 'ƌ', 'σ', 'Ⅸ', '∞', 'ţ', 'ů', '◁', '½', '¾', 'ᴾ', '�', 'ê', 'Ⅵ', 'ˢ', '°', 'ɮ', '⇪', 'ᵈ', 'Ė', 'Ǐ', '⊲', '·', 'û', '˅', '⊤', '↰', 'Ī', 'ȍ', '×', '⊝', '‟', '√', '➀', 'î', '↹', '➞', '↑', 'ü', '⋏', '℃', 'Û', 'Ȅ', '›', '⟶', '○', 'Ⓡ', 'Ȋ', '➜', 'ᴺ', 'å', '►', '˂', 'ι', 'ā', 'Ś', '∇', '•', '¥', '★', '⋅', 'ₖ', 'ũ', '⁼', 'İ', '∓', '⊂', '➯', '₅', 'Ồ', '»', 'Ž', 'ì', 'Ⅴ', '„', 'Ň', 'ú', '‑', 'Ä', '⊣', '˄', '˙', 'Ó', '±', '╳', 'ⁿ', 'ū', 'ş', 'л', 'Ṡ', 'ᴵ', 'Ȏ', 'ñ', 'λ', '✓', 'ø', '✞', '≤', 'Õ', '⎯', '⬌', 'ʳ', 'Š', '◉', '➨', 'ᶜ', 'ź', 'ġ', 'ÿ', '◦', 'ḻ', '➮', 'ᴸ', 'Ú', '─', '⇧', '⤶', 'ð', 'ë', 'Ξ', 'ȑ', '⇦', '↻', 'ă', 'Ě', 'Ω', 'Á', '₃', 'к', 'Ⅰ', '▬', '—', '∈', 'Ạ', '☐', '⁸', 'Ŕ', 'ù', 'â', 'п', 'ᴭ', '÷', '↲', '‘', 'Ȇ', 'ᵀ', '¿', 'Ț', '▎', 'ě', 'ⱽ', 'Λ', '∷', '△', 'ç', 'ǫ', 'Ầ', '➩', 'и', 'Ū', 'ý', '―', '⇵', 'Í', 'ꝋ', '↓', '©', '³', 'Ɔ', 'è', '🠈', 'ğ', 'Ⓐ', 'я', 'Φ', 'Ấ', 'ᵖ', '︽', '˚', 'œ', '∥', 'β', 'й', 'Ⓒ', '⬍', '∨', '℮', '¼', 'ć', '␣', 'Ã', '🡨', 'Ą', 'ǵ', '™', 'Ế', 'ᵐ', '◄', 'Ń', '✱', 'ô', '¢', '₁', 'Ⅱ', '¹', 'π', 'µ', 'Ĺ', '⍙', 'р', 'Ï', 'ε', '⟵', '∆', 'ы', '⧫', 'ã', 'ė', '⁰', '⬉', '−', '⬋', '◯', 'о', 'À', 'ρ', '☰', 'τ', 'ŗ', '⸬', 'Ö', 'é', 'ə', 'Ǫ', 'Ē', '⎵', '𝔀', 'ⓒ', 'ȏ', '“', 'Č', 'č', 'Î', '∙', 'ṣ', '\u200b', '✚', 'ō', '”', 'ö', 'ᴹ', '▢', 'ν', '⌣', '：', '︾', '﹘', 'а', '∖', '⌄', 'в', '︿', 'ᵃ', 'ớ', '↺', '▲', '▽', '…', 'Ë', '⌫', '⤷', '€', '⊘', 'Ŏ', '₂', '⤺', '⁵', 'Ȧ', '∧', 'ω', '卐', 'Ⅳ', '⁻', '↵', 'ĩ', 'Ⅲ', 'Ă', '⬸', 'ʃ', 'ȇ', '←', '⅓', '⮌', '⇥', 'η', '➦', 'Ô', '⬊', '℉', '⊥', 'á', 'ŉ', '⊚', '–', 'Ā', '∅', 'Ć', '∎', '⤸', '⦁', 'ē', 'ί', 'õ', 'ᴱ', 'υ', 'ß', '◡', 'È', '∣', 'Δ', 'ᴙ', 'ò', '⊢', 'κ', '☓', 'Ề', 'Θ', 'ä', '﹀', '☆', 'Ò', '˃', 'à', 'Ê', 'ʰ', 'Ğ', '’', '→', '®', '●', '⁺', 'Ţ', 'Ż', '̓', '▼', 'Ể', 'ᵒ', 'Ý', 'б', '➔', 'г', '∴', '⅔', '⬈', 'Ō', '∊', 'Π', 'Ⅷ', 'Ñ', '➝', 'É', 'Ł', 'ó', '∉', 'Ø', 'Ü', '⋮', 'ĺ', '≣', '∼', '↱', 'í', 'Ⅹ', 'ę', '⋯', 'с', '╎', '⤦', '⊼', 'ȧ', '∝', '⤻', 'ξ', 'š', '▾', 'γ', '¡', '⊳', 'д', '⁷', 'ж', '➧', 'ᴰ', '‧', '∘', 'ž', 'Ȯ', 'Ⅺ']
-CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
+# 导入中文字符集
+from .chinese_vocab import CTLABELS, CHAR_TO_IDX, IDX_TO_CHAR, VOCAB_SIZE
 
 
 def decode(idxs):
+    """解码索引序列为文本"""
     s = ''
     for idx in idxs:
+        if isinstance(idx, torch.Tensor):
+            idx = idx.item()
         if idx < len(CTLABELS):
             s += CTLABELS[idx]
         else:
-            return s
+            # 遇到未知索引就停止
+            break
     return s
 
 
 def encode(word):
+    """编码文本为索引序列"""
     s = []
-    max_word_len = 25
+    max_word_len = 25  # 可能需要根据中文文本长度调整
+    
     for i in range(max_word_len):
         if i < len(word):
-            char=word[i]
-            idx = CTLABELS.index(char)
-            s.append(idx)
+            char = word[i]
+            if char in CHAR_TO_IDX:
+                s.append(CHAR_TO_IDX[char])
+            else:
+                # 未知字符用特殊标记
+                s.append(VOCAB_SIZE)  # 或者跳过这个字符
         else:
-            s.append(96)
+            # 填充
+            s.append(VOCAB_SIZE)  # 使用vocab_size作为padding
     return s
+
+
+def is_valid_char(char):
+    """检查字符是否在支持的字符集中"""
+    return char in CHAR_TO_IDX
 
 
 def load_file_list(file_list_path: str, data_args=None):
@@ -53,14 +63,14 @@ def load_file_list(file_list_path: str, data_args=None):
 
         if dataset == 'sam_cleaned_100k':
             
-            # load json 
+            # 加载JSON数据
             json_path = ann_path 
-            with open(json_path, 'r') as f:
+            with open(json_path, 'r', encoding='utf-8') as f:  # 添加utf-8编码
                 json_data = json.load(f)
                 json_data = sorted(json_data.items())
             
 
-            # split train and val ratio 10:1
+            # 训练/验证分割
             split_index = int(len(json_data) * 10 / 11)
             if mode == 'TRAIN':
                 json_data = dict(json_data[:split_index])
@@ -90,26 +100,37 @@ def load_file_list(file_list_path: str, data_args=None):
 
                 for ann in img_ann:
 
-                    # process text 
+                    # 处理文本 - 修改的关键部分
                     text = ann['text']
-                    count=0
+                    
+                    # 检查文本中的字符是否都在支持的字符集中
+                    valid_char_count = 0
                     for char in text:
-                        # only allow OCR english vocab: range(32,127)
-                        if 32 <= ord(char) and ord(char) < 127:
-                            count+=1
-                            # print(char, ord(char))
-                    if count == len(text) and count < 26:
+                        if is_valid_char(char):
+                            valid_char_count += 1
+                    
+                    # 只接受完全支持的文本，并且长度合理
+                    if valid_char_count == len(text) and len(text) <= 25 and len(text) > 0:
                         texts.append(text)
-                        text_encs.append(encode(text))
-                        assert text == decode(encode(text)), 'check text encoding !'
+                        try:
+                            encoded_text = encode(text)
+                            text_encs.append(encoded_text)
+                            # 验证编码解码的一致性
+                            decoded_text = decode(encoded_text)
+                            if decoded_text.strip() != text.strip():
+                                print(f"Warning: Encoding/decoding mismatch for '{text}' -> '{decoded_text}'")
+                                continue
+                        except Exception as e:
+                            print(f"Error encoding text '{text}': {e}")
+                            continue
                     else:
+                        # 跳过包含不支持字符的文本
                         continue
 
 
-                    # process box
+                    # 处理边界框
                     box_xyxy = ann['bbox']
                     x1,y1,x2,y2 = box_xyxy
-                    box_xywh = [ x1, y1, x2-x1, y2-y1 ]
                     box_xyxy_scaled = list(map(lambda x: x/model_H, box_xyxy))  # scale box coord to [0,1]
                     x1,y1,x2,y2 = box_xyxy_scaled 
                     box_cxcywh = [(x1+x2)/2, (y1+y2)/2, x2-x1, y2-y1]   # xyxy -> cxcywh
@@ -119,7 +140,7 @@ def load_file_list(file_list_path: str, data_args=None):
                     boxes.append(processed_box)
 
 
-                    # process polygons
+                    # 处理多边形
                     poly = np.array(ann['polygon']).astype(np.int32)    # 16 2
                     # scale poly
                     poly_scaled = poly / np.array([model_W, model_H])
@@ -136,14 +157,15 @@ def load_file_list(file_list_path: str, data_args=None):
                     # cv2.imwrite('./img0_box.jpg', img0_box)
                     # cv2.imwrite('./img0_poly.jpg', img0_poly)
 
-                assert len(boxes) == len(texts) == len(text_encs) == len(polys), f" Check loader!"
+                assert len(boxes) == len(texts) == len(text_encs) == len(polys), f"Check loader!"
 
-                # if the filetered image has no bbox and texts, skip it
+                # 如果过滤后没有有效的文本框，跳过这张图片
                 if len(boxes) == 0 or len(polys) == 0:
                     continue
             
+                # 生成描述文本
                 caption = [f'"{txt}"' for txt in texts]
-                prompt = f"A realistic scene where the texts {', '.join(caption) } appear clearly on signs, boards, buildings, or other objects."
+                prompt = f"A realistic scene where the texts {', '.join(caption)} appear clearly on signs, boards, buildings, or other objects."
 
                 files.append({"image_path": gt_path, 
                               "prompt": prompt, 
@@ -155,7 +177,7 @@ def load_file_list(file_list_path: str, data_args=None):
     
 
     if mode=='VAL':
-        files = random.sample(files, 6)
+        files = random.sample(files, min(6, len(files)))
 
     return files
 

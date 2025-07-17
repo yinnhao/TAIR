@@ -1,0 +1,12 @@
+_BASE_: "./Base-TESTR-Chinese.yaml"
+DATASETS:
+  # 使用中文数据集 - 根据实际数据集名称调整
+  TRAIN: ("chinese_text_train", "mixed_chinese_english_train")
+  TEST: ("chinese_text_val",)
+MODEL:
+  TRANSFORMER:
+    USE_POLYGON: True
+    NUM_CTRL_POINTS: 16
+    VOC_SIZE: 1096  # 中文词汇表大小
+    LOSS:
+      POINT_TEXT_WEIGHT: 4.0 
