@@ -3,6 +3,7 @@ import torch.nn as nn
 from typing import List
 try:
     import cn_clip.clip as clip
+    from cn_clip.clip import load_from_name, available_models
     from cn_clip.clip import tokenize
     CHINESE_CLIP_AVAILABLE = True
 except ImportError:
@@ -16,7 +17,8 @@ class ChineseCLIPEmbedder(nn.Module):
     def __init__(self, model_name="ViT-B-16", pretrained="zh"):
         super().__init__()
         if CHINESE_CLIP_AVAILABLE:
-            self.model, self.preprocess = clip.load(model_name, device="cpu", download_root="./weights/")
+            # self.model, self.preprocess = clip.load(model_name, device="cpu", download_root="./weights/")
+            self.model, self.preprocess = load_from_name(model_name, device='cpu')
             self.use_chinese_clip = True
             print("Chinese-CLIP loaded successfully")
         else:

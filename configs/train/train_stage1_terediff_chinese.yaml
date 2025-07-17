@@ -37,7 +37,7 @@ model:
           attn_resolutions: []
           dropout: 0.0
       clip_cfg:
-        model_name: "ViT-B-16"
+        model_name: "ViT-H-14"
         pretrained: "zh"
       controlnet_cfg:
         use_checkpoint: True
@@ -115,7 +115,7 @@ dataset:
       p_empty_prompt: 0.2
       data_args: {
         'mode': 'TRAIN',
-        'datasets': ['chinese_text_dataset'], 
+        'datasets': ['sam_cleaned_100k'], 
         'ann_path': '/root/paddlejob/workspace/env_run/sa_text/restoration_dataset.json',
         'model_img_size': [512, 512],
       }
@@ -151,7 +151,7 @@ dataset:
 
       data_args: {
         'mode': 'VAL',
-        'datasets': ['chinese_text_dataset'], 
+        'datasets': ['sam_cleaned_100k'], 
         'ann_path': '/root/paddlejob/workspace/env_run/sa_text/restoration_dataset.json',
         'model_img_size': [512, 512],
       }
