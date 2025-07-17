@@ -27,15 +27,29 @@ class ChineseCLIPEmbedder(nn.Module):
             from .clip import FrozenOpenCLIPEmbedder
             self.model = FrozenOpenCLIPEmbedder()
             self.use_chinese_clip = False
+            self.projection = None
     
     def encode(self, texts: List[str]) -> torch.Tensor:
         if self.use_chinese_clip:
-            # 使用Chinese-CLIP
+            # 使用Chinese-CLIP，但返回序列特征而不是池化特征
             device = next(self.model.parameters()).device
             text_tokens = tokenize(texts).to(device)
+            
             with torch.no_grad():
-                text_features = self.model.encode_text(text_tokens)
-            return text_features
+                # 获取transformer的中间特征，类似FrozenOpenCLIPEmbedder的做法
+                x = self.model.token_embedding(text_tokens).type(self.model.dtype)
+                x = x + self.model.positional_embedding.type(self.model.dtype)
+                x = x.permute(1, 0, 2)  # NLD -> LND
+                x = self.model.transformer(x)
+                x = x.permute(1, 0, 2)  # LND -> NLD
+                x = self.model.ln_final(x).type(torch.float32)  # [batch_size, n_ctx, transformer.width]
+                
+                # 应用投影层到每个token
+                if self.projection is not None:
+                    # x shape: [batch_size, seq_len, 512] -> [batch_size, seq_len, 1024]
+                    x = self.projection(x)
+                
+            return x
         else:
             # 使用原始CLIP
             return self.model.encode(texts)
