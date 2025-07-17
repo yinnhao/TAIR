@@ -239,9 +239,9 @@ val:
   log_image_every: 500    # log image every n steps
 
 log_args:
-  log_tool: 
-  wandb_key: 
-  wandb_proj_name: 
+  log_tool: wandb
+  wandb_key: e84966e63c932deef657890cfbe4ff41b4d6d8b1
+  wandb_proj_name: tair-ori
 ## We recommend using wandb, uncomment the following lines and set the values
 # log_args:
 #   log_tool: wandb
