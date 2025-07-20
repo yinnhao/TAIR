@@ -2,7 +2,14 @@ from typing import List
 import torch
 import torch.nn as nn
 from torch.utils.checkpoint import checkpoint
-from .open_clip import CLIP, tokenize
+try:
+    from .open_clip import CLIP, tokenize
+except ImportError:
+    import sys
+    import os 
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    from open_clip import CLIP, tokenize
+
 
 
 class FrozenOpenCLIPEmbedder(nn.Module):
