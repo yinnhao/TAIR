@@ -155,7 +155,7 @@ def load_file_list(file_list_path: str, data_args=None):
     
 
     if mode=='VAL':
-        files = random.sample(files, 6)
+        files = random.sample(files, 14)
 
     return files
 
