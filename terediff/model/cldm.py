@@ -20,7 +20,7 @@ def disabled_train(self: nn.Module) -> nn.Module:
 class ControlLDM(nn.Module):
 
     def __init__(
-        self, unet_cfg, vae_cfg, clip_cfg, controlnet_cfg, latent_scale_factor, use_chinese_clip=True
+        self, unet_cfg, vae_cfg, clip_cfg, controlnet_cfg, latent_scale_factor, use_chinese_clip=False,
     ):
         super().__init__()
         self.unet = ControlledUnetModel(**unet_cfg)
