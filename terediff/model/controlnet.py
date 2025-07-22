@@ -321,9 +321,9 @@ class ControlNet(nn.Module):
         )
 
     def forward(self, x, hint, timesteps, context, **kwargs):
-        t_emb = timestep_embedding(timesteps, self.model_channels, repeat_only=False)
-        emb = self.time_embed(t_emb)
-        x = torch.cat((x, hint), dim=1)
+        t_emb = timestep_embedding(timesteps, self.model_channels, repeat_only=False) # [1, 320]
+        emb = self.time_embed(t_emb) # [1, 1280]
+        x = torch.cat((x, hint), dim=1) # [1, 8, 64, 64]
         outs = []
 
         h, emb, context = map(lambda t: t.type(self.dtype), (x, emb, context))
