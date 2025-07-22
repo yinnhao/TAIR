@@ -1,18 +1,34 @@
+import argparse
+import os
+from glob import glob
 from paddleocr import PaddleOCR
-ocr = PaddleOCR(
-    use_doc_orientation_classify=False,
-    use_doc_unwarping=False,
-    use_textline_orientation=False)
 
-# Run OCR inference on a sample image 
-# result = ocr.predict(
-#     input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png")
+def main():
+    parser = argparse.ArgumentParser(description='PaddleOCR script')
+    parser.add_argument('--input', type=str, required=True, help='Input image path or directory')
+    parser.add_argument('--output', type=str, required=True, help='Output directory')
+    args = parser.parse_args()
 
-result = ocr.predict(
-    input="/root/paddlejob/workspace/env_run/zhuyinghao/datasets/text_v1/images/ip11pro_output_testSR_2101225_xwm_renew_0.JPG")
+    # Create output directory if not exists
+    os.makedirs(args.output, exist_ok=True)
 
-# Visualize the results and save the JSON results
-for res in result:
-    res.print()
-    res.save_to_img("output")
-    res.save_to_json("output")
+    ocr = PaddleOCR(
+        use_doc_orientation_classify=False,
+        use_doc_unwarping=False,
+        use_textline_orientation=False)
+
+    # Handle single file or directory
+    if os.path.isfile(args.input):
+        files = [args.input]
+    else:
+        files = glob(os.path.join(args.input, '*'))
+
+    for file_path in files:
+        result = ocr.predict(input=file_path)
+        for res in result:
+            res.print()
+            res.save_to_img(args.output)
+            res.save_to_json(args.output)
+
+if __name__ == '__main__':
+    main()
