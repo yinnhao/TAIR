@@ -133,11 +133,11 @@ class MemoryEfficientCrossAttention(nn.Module):
         )
         self.attention_op: Optional[Any] = None
 
-    def forward(self, x, context=None, mask=None):
-        q = self.to_q(x)
+    def forward(self, x, context=None, mask=None): # [1, 4096, 320]
+        q = self.to_q(x) # [1, 4096, 320]
         context = default(context, x)
-        k = self.to_k(context)
-        v = self.to_v(context)
+        k = self.to_k(context)# [1, 4096, 320]
+        v = self.to_v(context)# [1, 4096, 320]
 
         b, _, _ = q.shape
         q, k, v = map(
@@ -335,14 +335,14 @@ class SpatialTransformer(nn.Module):
         # note: if no context is given, cross-attention defaults to self-attention
         if not isinstance(context, list):
             context = [context]
-        b, c, h, w = x.shape
+        b, c, h, w = x.shape # [1, 320, 64, 64]
         x_in = x
-        x = self.norm(x)
+        x = self.norm(x) # [1, 320, 64, 64]
         if not self.use_linear:
             x = self.proj_in(x)
-        x = rearrange(x, "b c h w -> b (h w) c").contiguous()
+        x = rearrange(x, "b c h w -> b (h w) c").contiguous() # [1, 4096, 320]
         if self.use_linear:
-            x = self.proj_in(x)
+            x = self.proj_in(x) # [1, 4096, 320]
         for i, block in enumerate(self.transformer_blocks):
             x = block(x, context=context[i])
         if self.use_linear:
@@ -350,4 +350,4 @@ class SpatialTransformer(nn.Module):
         x = rearrange(x, "b (h w) c -> b c h w", h=h, w=w).contiguous()
         if not self.use_linear:
             x = self.proj_out(x)
-        return x + x_in
+        return x + x_in # [1, 320, 64, 64]
